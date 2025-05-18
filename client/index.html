@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Leaflet Webmap - Nuremberg</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-measure@3.1.0/dist/leaflet-measure.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+
+    <!-- Leaflet.EasyPrint -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-easyprint@2.1.9/dist/easyPrint.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Photo Sphere Viewer CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@latest/dist/photo-sphere-viewer.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/virtual-tour-plugin@latest/dist/virtual-tour-plugin.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <!-- Search Bar and Menu Icon Container -->
+        <div class="search-menu-container">
+            <button id="menu-button" class="menu-icon-button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search locations...">
+                <button id="search-button"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        
+        <!-- Branding -->
+        <div id="branding">
+            <span id="company-branding">GeoMark</span>
+        </div>
+        
+        <!-- Category List -->
+        <ul id="category-list">
+            <li class="category-item" data-category="food">
+                <i class="fas fa-utensils"></i> <span>Food</span>
+            </li>
+            <li class="category-item" data-category="culture">
+                <i class="fas fa-theater-masks"></i> <span>Culture & Entertainment</span>
+            </li>
+            <li class="category-item" data-category="shopping">
+                <i class="fas fa-shopping-bag"></i> <span>Shopping</span>
+            </li>
+            <li class="category-item" data-category="tourism">
+                <i class="fas fa-landmark"></i> <span>Tourism</span>
+            </li>
+            <li class="category-item" data-category="hotels">
+                <i class="fas fa-hotel"></i> <span>Hotels</span>
+            </li>
+            <li class="category-item" data-category="sports">
+                <i class="fas fa-running"></i> <span>Sports & Leisure</span>
+            </li>
+            <li class="category-item" data-category="services">
+                <i class="fas fa-concierge-bell"></i> <span>Services</span>
+            </li>
+            <li class="category-item" data-category="craft">
+                <i class="fas fa-industry"></i> <span>Craft & Industry</span>
+            </li>
+            <li class="category-item" data-category="administration">
+                <i class="fas fa-city"></i> <span>Administration</span>
+            </li>
+            <li class="category-item" data-category="healthcare">
+                <i class="fas fa-hospital"></i> <span>Healthcare & Emergency</span>
+            </li>
+            <li class="category-item" data-category="transportation">
+                <i class="fas fa-bus"></i> <span>Transportation</span>
+            </li>
+            <li class="category-item" data-category="hiking">
+                <i class="fas fa-hiking"></i> <span>Hiking & Trails</span>
+            </li>
+            <li class="category-item" data-category="info">
+                <i class="fas fa-info-circle"></i> <span>Info</span>
+            </li>
+            <li class="category-item" data-category="extra-info">
+                <i class="fas fa-ellipsis-h"></i> <span>Extra Info</span>
+            </li>
+        </ul>
+        
+        <!-- Layer Management (Hidden by default, can be shown via menu) -->
+        <div id="layer-management-tools" style="display: none;">
+            <h4 id="my-layers-header">My Uploaded Layers</h4>
+            
+            <div class="file-input-container">
+                <label for="geojson-input" id="geojson-input-label">Load GeoJSON (Client-side):</label>
+                <input type="file" id="geojson-input" accept=".geojson,.json">
+            </div>
+            
+            <div class="file-input-container">
+                <label for="shapefile-input" id="shapefile-input-label">Load Shapefile (.zip, Client-side):</label>
+                <input type="file" id="shapefile-input" accept=".zip">
+            </div>
+            
+            <div class="wms-input-container">
+                <label for="wms-url-input" id="wms-url-label">WMS URL:</label>
+                <input type="text" id="wms-url-input">
+                
+                <label for="wms-layer-input" id="wms-layer-label">WMS Layer Name:</label>
+                <input type="text" id="wms-layer-input">
+                
+                <button id="add-wms-layer">Add WMS Layer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Map Container -->
+    <div id="map"></div>
+    
+    <!-- Menu Panel -->
+    <div class="menu-panel-class" id="menu-panel">
+        <h4 id="menu-header">Menu</h4>
+        <button id="close-menu-panel">&times;</button>
+        <hr>
+        <ul id="main-menu-list">
+            <li><a href="#"><i class="fas fa-map-marked-alt"></i> <span id="view-map-text">View Map</span></a></li>
+            <li><a href="#" id="manage-layers-link"><i class="fas fa-layer-group"></i> <span id="manage-layers-text">Manage Layers</span></a></li>
+            <li><a href="#"><i class="fas fa-images"></i> <span id="media-gallery-text">Media Gallery</span></a></li>
+            <li><a href="#"><i class="fas fa-upload"></i> <span id="upload-data-text">Upload Data</span></a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> <span id="settings-text">Settings</span></a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i> <span id="help-text">Help</span></a></li>
+        </ul>
+    </div>
+    
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="de">DE</button>
+    </div>
+    
+    <!-- Map Controls -->
+    <div class="map-controls">
+        <button class="map-control-button" id="layers-button" title="Layers">
+            <i class="fas fa-layer-group"></i>
+        </button>
+        <button class="map-control-button" id="locate-button" title="Your Position">
+            <i class="fas fa-location-arrow"></i>
+        </button>
+        <button class="map-control-button" id="refresh-button" title="Refresh Page">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="map-control-button" id="overview-button" title="Overview Map">
+            <i class="fas fa-map"></i>
+        </button>
+        <button class="map-control-button" id="print-tool-btn" title="Print Map"><i class="fas fa-print"></i> <span class="button-text" data-i18n="print"></span></button>
+    </div>
+    
+    <!-- Info Modal -->
+    <div class="modal" id="info-modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-info-modal">&times;</span>
+            <h2 id="info-modal-title">About This Map</h2>
+            
+            <div id="info-modal-tabs">
+                <button class="tab-link active" data-tab="about">About</button>
+                <button class="tab-link" data-tab="data-sources">Data Sources</button>
+                <button class="tab-link" data-tab="help">Help</button>
+            </div>
+            
+            <div id="about-tab" class="tab-content" style="display: block;">
+                <h3 id="about-tab-title">About This Application</h3>
+                <p id="about-tab-content">This is a web mapping application that allows users to view and interact with geographic data. Users can upload their own data, add layers from external sources, and perform various spatial operations.</p>
+            </div>
+            
+            <div id="data-sources-tab" class="tab-content">
+                <h3 id="data-sources-tab-title">Data Sources</h3>
+                <ul>
+                    <li>Base Maps: OpenStreetMap, Mapbox, MapTiler</li>
+                    <li>User-uploaded GeoJSON and Shapefiles</li>
+                    <li>WMS Layers from external services</li>
+                </ul>
+            </div>
+            
+            <div id="help-tab" class="tab-content">
+                <h3 id="help-tab-title">Help</h3>
+                <p id="help-tab-content">For assistance using this application, please refer to the documentation or contact support.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Extra Info Modal -->
+    <div class="modal" id="extra-info-modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-extra-info-modal">&times;</span>
+            <h2 id="extra-info-modal-title">Additional Information</h2>
+            <p id="extra-info-modal-content">This section contains additional information about the application and its features.</p>
+        </div>
+    </div>
+    
+    <!-- Share Modal -->
+    <div class="modal" id="share-modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-share-modal">&times;</span>
+            <h2 id="share-modal-title">Share Map</h2>
+            
+            <div class="form-group">
+                <label for="share-url" id="share-url-label">Map URL:</label>
+                <input type="text" id="share-url" readonly>
+                <small id="share-url-help">Copy this URL to share the current map view.</small>
+            </div>
+            
+            <div class="form-group">
+                <label id="share-options-label">Share Options:</label>
+                <button class="button" id="copy-url-button">Copy URL</button>
+                <button class="button" id="share-email-button">Email</button>
+                <button class="button" id="share-twitter-button">Twitter</button>
+                <button class="button" id="share-facebook-button">Facebook</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loading-indicator">
+        <div class="loading-spinner"></div>
+        <p id="loading-text">Loading...</p>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+    
+    <!-- 360 Photo Sphere Viewer Container -->
+    <div id="photosphere-viewer-container">
+        <button class="close-360-viewer" id="close-360-viewer">&times;</button>
+    </div>
+    
+    <!-- Basemap Toggle Button -->
+    <button id="baselayer-toggle-button" title="Toggle Basemaps">
+        <i class="fas fa-layer-group"></i>
+    </button>
+    
+    <!-- Custom Basemap Control -->
+    <div class="custom-baselayer-control">
+        <div class="basemap-grid" id="basemap-grid">
+            <!-- Basemap options will be dynamically added here -->
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-measure@3.1.0/dist/leaflet-measure.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/dist/bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/shpjs@latest/dist/shp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4.6.3/dist/photo-sphere-viewer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4.6.3/dist/plugins/virtual-tour.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/photosphere_integration.js"></script>
+</body>
+</html>
