@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Initialize map
     const map = L.map('map', {
-        center: [49.4521, 11.0767], // Nuremberg, Germany
-        zoom: 13,
+        center: [48.89241, 11.18033], // Nuremberg, Germany
+        zoom: 14,
         zoomControl: false // We'll add custom zoom control
     });
 
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         position: 'topleft'
     }).addTo(map);
 
-    // Base layers
+    // BaseMap layers
     const baseLayers = {
         "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -356,7 +356,109 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialize UI with default language
     updateUILanguage();
 
-    // Category item click handler
+    //----------------------------------------------------------------------------
+    // item click handler for categories that load POIs
+    //----------------------------------------------------------------------------
+    document.querySelectorAll('.category-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            // Food category
+            if (category === 'food') {
+                fetchData(category);
+                /*fetch(`http://localhost:3000/api/${category}`) //fetch(`http://localhost:3000/api/food`)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        //the logic to display data on the map
+                        const poiLayer = L.geoJSON(data, {
+                            onEachFeature: function (feature, layer) {
+                                layer.bindPopup(`<b>${feature.properties.name}</b>`);
+                            }
+                        }).addTo(map);
+
+                        // Zoom to bounds
+                        if (data.features.length > 0) {
+                            map.fitBounds(poiLayer.getBounds());
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Failed to load POIs:", err);
+                        alert(err);
+                    });*/
+            }
+            // Culture category
+            else if (category === 'culture') {
+                fetchData(category);
+            }
+            // Shopping category
+            else if (category === 'shopping') {
+                fetchData(category);
+            }
+            // Tourism category
+            else if (category === 'tourism') {
+                fetchData(category);
+            }
+            // Hotels category
+            else if (category === 'hotels') {
+                fetchData(category);
+            }
+            // Sports category
+            else if (category === 'sports') {
+                fetchData(category);
+            }
+            // Services category
+            else if (category === 'services') {
+                fetchData(category);
+            }
+            // Craft category
+            else if (category === 'crafts') {
+                fetchData(category);
+            }
+            // Administration category
+            else if (category === 'administration') {
+                fetchData(category);
+            }
+            // Healthcare category
+            else if (category === 'healthcare') {
+                fetchData(category);
+            }
+            // Transportation category
+            else if (category === 'transportation') {
+                fetchData(category);
+            }
+            // Hiking category
+            else if (category === 'hiking') {
+                fetchData(category);
+            }
+        })
+    })
+    // Fetch data from server
+    function fetchData(category) {
+        fetch(`http://localhost:3000/api/${category}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                //the logic to display data on the map
+                const poiLayer = L.geoJSON(data, {
+                    onEachFeature: function (feature, layer) {
+                        layer.bindPopup(`<b>${feature.properties.name}</b>`);
+                    }
+                }).addTo(map);
+
+                // Zoom to bounds
+                if (data.features.length > 0) {
+                    map.fitBounds(poiLayer.getBounds());
+                }
+            })
+            .catch(err => {
+                console.error("Failed to load POIs:", err);
+                alert(err);
+            });
+    }
+    /*
+    //-----------------------------------------------------------------------
+    // item click handler for other categories
+    //------------------------------------------------------------------------
     document.querySelectorAll('.category-item').forEach(item => {
         item.addEventListener('click', function() {
             const category = this.getAttribute('data-category');
@@ -370,7 +472,7 @@ document.addEventListener("DOMContentLoaded", function() {
             
             // Special handling for info category
             if (category === 'info') {
-                document.getElementById('info-modal').style.display = 'block';
+                document.getElementById('info-modal').style.display = 'active';
                 return;
             }
             
@@ -409,7 +511,8 @@ document.addEventListener("DOMContentLoaded", function() {
             }, 3000);
         });
     });
-
+    //-----------------------------------------------------------------------
+    */
     // Menu button - Show/hide menu panel
     document.getElementById('menu-button').addEventListener('click', function() {
         const menuPanel = document.getElementById('menu-panel');
@@ -842,5 +945,4 @@ document.addEventListener("DOMContentLoaded", function() {
         // Trigger the print dialog
         window.printControl.printMap('CurrentSize', 'map-export');
     });
-
 });
