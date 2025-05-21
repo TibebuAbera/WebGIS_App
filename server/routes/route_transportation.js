@@ -8,9 +8,9 @@ router.get('/', async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT 
-        id,
-        fclass,
-        name,
+        fid,
+        bemerk,
+        art
         ST_AsGeoJSON(geom)::json AS geometry
       FROM transportation
     `);
@@ -19,9 +19,9 @@ router.get('/', async (req, res) => {
       type: "Feature",
       geometry: row.geometry,
       properties: {
-        id: row.id,
-        fclass: row.fclass,
-        name: row.name
+        fid: row.fid,
+        bemerk: row.bemerk,
+        art: row.art
       }
     }));
 

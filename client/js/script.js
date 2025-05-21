@@ -356,35 +356,16 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialize UI with default language
     updateUILanguage();
 
-    //----------------------------------------------------------------------------
-    // item click handler for categories that load POIs
-    //----------------------------------------------------------------------------
+    //-----------------------------------------------------------
+    // item click handler for categories
+    //-----------------------------------------------------------
     document.querySelectorAll('.category-item').forEach(item => {
         item.addEventListener('click', function() {
             const category = this.getAttribute('data-category');
+            
             // Food category
             if (category === 'food') {
                 fetchData(category);
-                /*fetch(`http://localhost:3000/api/${category}`) //fetch(`http://localhost:3000/api/food`)
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data);
-                        //the logic to display data on the map
-                        const poiLayer = L.geoJSON(data, {
-                            onEachFeature: function (feature, layer) {
-                                layer.bindPopup(`<b>${feature.properties.name}</b>`);
-                            }
-                        }).addTo(map);
-
-                        // Zoom to bounds
-                        if (data.features.length > 0) {
-                            map.fitBounds(poiLayer.getBounds());
-                        }
-                    })
-                    .catch(err => {
-                        console.error("Failed to load POIs:", err);
-                        alert(err);
-                    });*/
             }
             // Culture category
             else if (category === 'culture') {
@@ -430,49 +411,15 @@ document.addEventListener("DOMContentLoaded", function() {
             else if (category === 'hiking') {
                 fetchData(category);
             }
-        })
-    })
-    // Fetch data from server
-    function fetchData(category) {
-        fetch(`http://localhost:3000/api/${category}`)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                //the logic to display data on the map
-                const poiLayer = L.geoJSON(data, {
-                    onEachFeature: function (feature, layer) {
-                        layer.bindPopup(`<b>${feature.properties.name}</b>`);
-                    }
-                }).addTo(map);
-
-                // Zoom to bounds
-                if (data.features.length > 0) {
-                    map.fitBounds(poiLayer.getBounds());
-                }
-            })
-            .catch(err => {
-                console.error("Failed to load POIs:", err);
-                alert(err);
-            });
-    }
-    /*
-    //-----------------------------------------------------------------------
-    // item click handler for other categories
-    //------------------------------------------------------------------------
-    document.querySelectorAll('.category-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const category = this.getAttribute('data-category');
-            
-            // Special handling for extra-info category
+            // extra-info category
             if (category === 'extra-info') {
                 const extraInfoModal = document.getElementById('extra-info-modal');
                 extraInfoModal.style.display = 'block';
                 return;
-            }
-            
-            // Special handling for info category
+            }            
+            // info category
             if (category === 'info') {
-                document.getElementById('info-modal').style.display = 'active';
+                document.getElementById('info-modal').style.display = 'block';
                 return;
             }
             
@@ -484,7 +431,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Add the layer to the map if it's not already there
                 if (categoryLayers[category] && !map.hasLayer(categoryLayers[category])) {
                     map.addLayer(categoryLayers[category]);
-                    
+
                     // If this is the first activation, fit bounds to show all markers
                     if (categoryLayers[category].getLayers().length > 0) {
                         map.fitBounds(categoryLayers[category].getBounds(), {
@@ -509,10 +456,38 @@ document.addEventListener("DOMContentLoaded", function() {
             setTimeout(function() {
                 notification.style.display = 'none';
             }, 3000);
-        });
-    });
-    //-----------------------------------------------------------------------
-    */
+        })
+    })
+    // Fetch data from server
+    function fetchData(category) {
+        fetch(`http://localhost:3000/api/${category}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data); 
+                            
+                //loaded data from server
+                const poiLayer = L.geoJSON(data, {
+                    onEachFeature: function (feature, layer) {
+                        layer.bindPopup(`<b>${feature.properties.name}</b>`);
+                    }
+                });
+                // Create cluster group
+                const markers = L.markerClusterGroup();
+                // Add the layer to the map
+                markers.addLayer(poiLayer);
+                map.addLayer(markers);
+
+                // Zoom to bounds
+                if (data.features.length > 0) {
+                    map.fitBounds(markers.getBounds()); //map.fitBounds(poiLayer.getBounds());
+                }
+            })
+            .catch(err => {
+                console.error("Failed to load POIs:", err);
+                alert(err);
+            });
+    }  
+
     // Menu button - Show/hide menu panel
     document.getElementById('menu-button').addEventListener('click', function() {
         const menuPanel = document.getElementById('menu-panel');
