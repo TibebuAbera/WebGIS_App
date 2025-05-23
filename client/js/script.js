@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const t = translations[currentLang];
         
         // Update search placeholder
-        document.getElementById('search-input').placeholder = t.search;
+        document.getElementById('search-box').placeholder = t.search;
         
         // Update category names
         document.querySelectorAll('#category-list li').forEach(item => {
@@ -357,7 +357,69 @@ document.addEventListener("DOMContentLoaded", function() {
     updateUILanguage();
 
     //-----------------------------------------------------------
-    // item click handler for categories
+    // item click handler for search results
+    //-----------------------------------------------------------
+    const searchBox = document.getElementById('search-box');
+    const autocompleteList = document.getElementById('autocomplete-list');
+    const searchButton = document.getElementById('search-button');
+
+    // Show suggestions when user types
+    searchBox.addEventListener('input', async function () {
+        const query = this.value;
+        // Stop executing this block if the input is empty
+        if (!query) {
+            autocompleteList.innerHTML = '';
+            return;
+        }
+        try {
+            const res = await fetch(`http://localhost:3000/api/search?table=pois&query=${query}`);
+            const data = await res.json();
+            
+            autocompleteList.innerHTML = '';
+            // creates a div for each response and navigates to the location when clicked
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.textContent = item.name;
+                div.addEventListener('click', () => {
+                    searchBox.value = item.name;
+                    autocompleteList.innerHTML = '';
+                    flyToLocation(item);
+                });
+                autocompleteList.appendChild(div);
+            });
+        } catch (err) {
+            console.error('Autocomplete fetch failed:', err);
+        }
+    });
+
+    // Fly to result (on map)
+    function flyToLocation(item) {
+        const { lat, lng } = item;
+        map.setView([lat, lng], 18); // Adjust zoom
+        L.popup()
+            .setLatLng([lat, lng])
+            .setContent(`<b>${item.name}</b>`)
+            .openOn(map);
+    }
+
+    // Zoom to found Pois when the 'search button' is clicked
+    searchButton.addEventListener('click', async () => {
+        const value = searchBox.value;
+        if (!value) return;
+        try {
+            const res = await fetch(`http://localhost:3000/api/search?table=pois&query=${value}`);
+            const results = await res.json();
+            if (results.length > 0) {
+                flyToLocation(results[0]);
+            }
+        } catch (err) {
+            console.error('Search button error:', err);
+        }
+    });
+
+
+    //-----------------------------------------------------------
+    // item click handler for categories in sidebar
     //-----------------------------------------------------------
     document.querySelectorAll('.category-item').forEach(item => {
         item.addEventListener('click', function() {
@@ -368,47 +430,47 @@ document.addEventListener("DOMContentLoaded", function() {
                 fetchData(category);
             }
             // Culture category
-            else if (category === 'culture') {
+            if (category === 'culture') {
                 fetchData(category);
             }
             // Shopping category
-            else if (category === 'shopping') {
+            if (category === 'shopping') {
                 fetchData(category);
             }
             // Tourism category
-            else if (category === 'tourism') {
+            if (category === 'tourism') {
                 fetchData(category);
             }
             // Hotels category
-            else if (category === 'hotels') {
+            if (category === 'hotels') {
                 fetchData(category);
             }
             // Sports category
-            else if (category === 'sports') {
+            if (category === 'sports') {
                 fetchData(category);
             }
             // Services category
-            else if (category === 'services') {
+            if (category === 'services') {
                 fetchData(category);
             }
             // Craft category
-            else if (category === 'crafts') {
+            if (category === 'crafts') {
                 fetchData(category);
             }
             // Administration category
-            else if (category === 'administration') {
+            if (category === 'administration') {
                 fetchData(category);
             }
             // Healthcare category
-            else if (category === 'healthcare') {
+            if (category === 'healthcare') {
                 fetchData(category);
             }
             // Transportation category
-            else if (category === 'transportation') {
+            if (category === 'transportation') {
                 fetchData(category);
             }
             // Hiking category
-            else if (category === 'hiking') {
+            if (category === 'hiking') {
                 fetchData(category);
             }
             // extra-info category

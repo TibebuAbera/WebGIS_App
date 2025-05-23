@@ -20,6 +20,7 @@
     <!-- MarkerCluster Plugin -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesomplete@1.1.5/awesomplete.css" />
 </head>
 <body>
     <!-- Sidebar -->
@@ -30,7 +31,8 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search locations...">
+                <input type="text" id="search-box" placeholder="Search locations...">
+                <div id="autocomplete-list" class="autocomplete-items"></div>
                 <button id="search-button"><i class="fas fa-search"></i></button>
             </div>
         </div>
@@ -255,5 +257,6 @@
     <script src="js/script.js"></script>
     <script src="js/photosphere_integration.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.5/awesomplete.min.js" async></script>
 </body>
 </html>

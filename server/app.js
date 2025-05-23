@@ -6,8 +6,8 @@ require('dotenv').config();
 app.use(cors());
 app.use(express.json());
 
-const foodRoute = require('./routes/route_food.js');
-app.use('/api/food', foodRoute); //uses route_1.js for food route
+/*const foodRoute = require('./routes/route_food.js');
+app.use('/api/food', foodRoute);
 
 const cultureRoute = require('./routes/route_culture.js');
 app.use('/api/culture', cultureRoute); 
@@ -40,7 +40,20 @@ const transportationRoute = require('./routes/route_transportation.js');
 app.use('/api/transportation', transportationRoute);
 
 const hikingRoute = require('./routes/route_hiking.js');
-app.use('/api/hiking', hikingRoute);
+app.use('/api/hiking', hikingRoute);*/
+
+// Import the routes from route_pois.js for all categories (POIs)
+// This will dynamically create routes for all categories
+const poisRoute = require('./routes/route_pois.js');
+app.use('/api', poisRoute);
+
+//Import the route for the Search functionality
+const searchRoute = require('./routes/route_searchfunction.js');
+app.use('/api/search', searchRoute);
+
+// Handle any requests that don't match the above routes
+// codes here
+
 
 
 

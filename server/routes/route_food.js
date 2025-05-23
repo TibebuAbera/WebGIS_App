@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../db/config.js'); //import DB connection
+//import DB connection
+const pool = require('../db/config.js'); 
 
-// FOOD: return all point features as a GeoJSON FeatureCollection
+//returns all point features of fclass 'food' as a GeoJSON FeatureCollection
 //---------------------------------------------------------------
 router.get('/', async (req, res) => {
   try {
@@ -12,7 +13,9 @@ router.get('/', async (req, res) => {
         fclass,
         name,
         ST_AsGeoJSON(geom)::json AS geometry
-      FROM food
+      FROM pois
+      WHERE fclass = 'food'
+      AND geom IS NOT NULL
     `);
 
     const features = result.rows.map(row => ({
