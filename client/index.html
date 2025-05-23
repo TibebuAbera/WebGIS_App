@@ -4,22 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Leaflet Webmap - Nuremberg</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-measure@3.1.0/dist/leaflet-measure.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
-
-    <!-- Leaflet.EasyPrint -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet-easyprint@2.1.9/dist/easyPrint.css">
-
     <link rel="stylesheet" href="css/style.css">
-    <!-- Photo Sphere Viewer CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@latest/dist/photo-sphere-viewer.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/virtual-tour-plugin@latest/dist/virtual-tour-plugin.min.css">
-    <!-- MarkerCluster Plugin -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/video-plugin@latest/dist/video-plugin.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesomplete@1.1.5/awesomplete.css" />
 </head>
 <body>
@@ -65,7 +59,7 @@
             <li class="category-item" data-category="services">
                 <i class="fas fa-concierge-bell"></i> <span>Services</span>
             </li>
-            <li class="category-item" data-category="crafts">
+            <li class="category-item" data-category="craft">
                 <i class="fas fa-industry"></i> <span>Craft & Industry</span>
             </li>
             <li class="category-item" data-category="administration">
@@ -80,12 +74,16 @@
             <li class="category-item" data-category="hiking">
                 <i class="fas fa-hiking"></i> <span>Hiking & Trails</span>
             </li>
+            <li class="category-item" data-category="360media">
+                <i class="fas fa-vr-cardboard"></i> <span>360° Media</span>
+            </li>
             <li class="category-item" data-category="info">
                 <i class="fas fa-info-circle"></i> <span>Info</span>
             </li>
             <li class="category-item" data-category="extra-info">
                 <i class="fas fa-ellipsis-h"></i> <span>Extra Info</span>
             </li>
+            
         </ul>
         
         <!-- Layer Management (Hidden by default, can be shown via menu) -->
@@ -113,6 +111,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Add overlay div instead of pseudo-element for better browser compatibility -->
+    <!-- Add right after sidebar element -->
+    
+    <div class="sidebar-overlay"></div>
+    
     
     <!-- Map Container -->
     <div id="map"></div>
@@ -254,9 +258,10 @@
     <script src="https://cdn.jsdelivr.net/npm/shpjs@latest/dist/shp.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4.6.3/dist/photo-sphere-viewer.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/photo-sphere-viewer@4.6.3/dist/plugins/virtual-tour.min.js"></script>
+    <script src="https://vjs.zencdn.net/7.8.4/video.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/video-plugin@latest/dist/video-plugin.min.js"></script>
     <script src="js/script.js"></script>
     <script src="js/photosphere_integration.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.5/awesomplete.min.js" async></script>
 </body>
 </html>

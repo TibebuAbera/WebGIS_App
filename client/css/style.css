@@ -3,8 +3,8 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow: hidden;
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, 'Arial',sans-serif;
+   
 }
 
 body {
@@ -13,7 +13,7 @@ body {
 }
 
 :root {
-    /* easyXplore color palette */
+    /* geomark color palette */
     --primary-color: #005f73;
     --primary-dark: #003844;
     --primary-light: #0a9396;
@@ -23,6 +23,7 @@ body {
     --divider-color: #BDBDBD;
     --background-light: #FFFFFF;
     --background-grey: #F5F5F5;
+    --360media-color: #8e44ad;
     
     /* Category colors */
     --food-color: #e63946;
@@ -42,12 +43,12 @@ body {
 
 /* Map container */
 #map {
-    height: 100vh;
-    width: calc(100% - 240px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: 1;
-    transition: width 0.3s ease;
-    position: relative;
-    margin-left: 240px; /* Match sidebar width */
 }
 
 /* Sidebar styling */
@@ -77,6 +78,7 @@ body {
     background-color: #1a2530;
     padding: 10px;
     box-sizing: border-box;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .menu-icon-button {
@@ -115,11 +117,13 @@ body {
 #search-box {
     width: calc(100% - 40px);
     padding: 8px;
-    border: none;
+    border: 1px solid #ced4da;
     border-radius: 4px 0 0 4px;
     outline: none;
     background-color: #34495e;
     color: white;
+    padding: 12px; /* Increased padding for better touch input */
+    flex-grow: 1;
 }
 
 #search-box::placeholder {
@@ -175,13 +179,16 @@ body {
     padding: 15px;
     text-align: center;
     margin-bottom: 10px;
+
 }
 
 #company-branding {
+    font-size: 24px;
+    font-weight: bold;
     display: block;
     font-size: 1.8rem;
     font-weight: bold;
-    color: #ffd700;
+    color: #8eac24;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -195,28 +202,63 @@ body {
 #category-list li {
     padding: 12px 15px;
     cursor: pointer;
-    border-bottom: 1px solid #34495e;
+    border-bottom: 1px solid #8f2763;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
 }
 
 #category-list li:hover {
-    background-color: #34495e;
+    background-color: #0d5194;
     padding-left: 20px;
 }
 
+/* Active category styling */
+#category-list li.active {
+    background-color: rgba(14, 9, 165, 0.1);
+    box-shadow: inset 3px 0 0 var(--primary-color);
+}
+
 #category-list li i {
-    margin-right: 15px;
-    width: 20px;
+    margin-right: 12px;
+    width: 24px;
     text-align: center;
     font-size: 18px;
-    transition: transform 0.2s ease;
+    transition: 0.2s ease;
 }
 
 #category-list li:hover i {
     transform: scale(1.1);
 }
+
+
+/* new Category list styling */
+#category-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#category-list li {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.4s;
+    display: flex;
+    align-items: center;
+}
+
+#category-list li:hover {
+    background-color: #d39898;
+}
+
+#category-list li i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+
 
 /* Category colors */
 #category-list li[data-category="food"] {
@@ -267,9 +309,13 @@ body {
     border-left: 5px solid var(--hiking-color);
 }
 
+#category-list li[data-category="360media"] {
+    border-left: 5px solid var(--360media-color);
+}
+
 #category-list li[data-category="info"] {
     border-left: 5px solid var(--info-color);
-    background-color: #34495e;
+    
 }
 
 /* Top menu - removed as per user request */
@@ -320,7 +366,7 @@ body {
 
 /* Menu panel */
 .menu-panel-class {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: -280px; /* Start off-screen */
     background-color: white;
@@ -344,7 +390,7 @@ body {
     color: white;
     background-color: var(--primary-color);
     border-bottom: 1px solid var(--primary-light);
-    font-size: 1.2rem;
+    font-size: 18px; /* Better size for mobile */
 }
 
 .menu-panel-class hr {
@@ -716,6 +762,26 @@ body {
     to {opacity: 1; transform: translate(-50%, 0);}
 }
 
+/* Media viewer button */
+.view-media-btn {
+    margin-top: 10px;
+    padding: 8px 15px;
+    background: var(--360media-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.view-media-btn:hover {
+    background: #6c3483;
+}
+
+
 /* 360 Photo Sphere Viewer */
 #photosphere-viewer-container {
     position: absolute;
@@ -877,88 +943,293 @@ body {
     pointer-events: auto !important;
 }
 
-/* Mobile responsiveness */
+.leaflet-popup-content {
+    margin: 12px !important;
+}
+
+.popup-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.media-controls {
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.media-preview img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+
+/* Add mobile menu toggle button styles */
+#mobile-menu-toggle {
+    z-index: 2100 !important; /* Higher than sidebar and overlay */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background-color: var(--primary-color) !important;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    transition: left 0.3s ease;
+}
+
+#mobile-menu-toggle:hover {
+    background-color: #f39c12;
+    transform: scale(1.05);
+}
+
+
+/* Mobile responsive adjustments */
+/* Mobile View Fixes */
 @media (max-width: 768px) {
+    #sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1002 !important; /* Higher than map controls */
+        width: 280px;
+    }
+
+    #sidebar.open {
+        transform: translateX(0);
+        box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    #mobile-menu-toggle {
+        display: flex !important;
+        z-index: 1003 !important;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        background: var(--primary-color);
+        color: white;
+    }
+
     #map {
-        width: 100%;
-        margin-left: 0;
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    /* Overlay for click-outside functionality */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.3);
+        z-index: 1001;
+        display: none;
+    }
+
+    #sidebar.open + .sidebar-overlay {
+        display: block;
+    }
+
+    /* Category list adjustments */
+    #category-list li {
+        padding: 14px 20px;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    /* Search input mobile optimization */
+    #search-input {
+        font-size: 16px;
+        padding: 12px 15px;
+    }
+}
+
+/* Desktop Behavior Preservation */
+@media (min-width: 769px) {
+    #mobile-menu-toggle {
+        display: none !important;
     }
     
     #sidebar {
-        width: 240px;
-        left: -240px;
-        z-index: 1500;
+        width: 240px !important;
+        transform: none !important;
     }
     
-    #sidebar.open {
-        left: 0;
+    #map {
+        width: calc(100% - 240px) !important;
+        margin-left: 240px !important;
+    }
+}
+
+
+/* Tablet responsive adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    #sidebar {
+        width: 260px;
     }
     
-    .top-menu {
-        left: 0;
-        width: 100%;
+    #map {
+        width: calc(100% - 260px);
+        margin-left: 260px;
     }
-    
-    .menu-panel-class {
-        z-index: 1600;
-    }
-    
-    .routing-panel {
-        width: 100%;
-        right: -100%;
-    }
-    
-    .modal-content {
-        width: 90%;
-        margin: 20% auto;
-    }
-    
-    #info-modal-tabs {
-        flex-wrap: wrap;
-    }
-    
-    .tab-link {
-        flex-grow: 1;
-        text-align: center;
-        margin-bottom: 5px;
-    }
-    
-    .map-controls {
-        top: 60px;
-        right: 10px;
-    }
-    
-    .language-switcher {
-        top: 10px;
-        right: 10px;
+}
+
+/* Laptop View Adjustments */
+@media (min-width: 769px) and (max-width: 1200px) {
+    #sidebar {
+        width: 280px; /* Slightly narrower for laptop */
     }
     
     .custom-baselayer-control {
-        bottom: 70px;
-        right: 10px;
-        max-width: 300px;
+        width: 280px; /* Slightly narrower for laptop */
+    }
+
+    #map {
+        width: calc(100% - 280px);
+        margin-left: 280px;
     }
     
-    /* Mobile menu button */
-    .mobile-menu-button {
-        display: block;
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 1600;
-        width: 40px;
-        height: 40px;
-        background-color: white;
-        border-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    #category-list li {
+        padding: 14px 18px;
+    }
+    /* Improved touch targets for laptop touchscreens */
+    .category-item, 
+    .button,
+    .map-control-button,
+    .media-action-btn {
         cursor: pointer;
     }
+}
+
+/* Prevent text truncation in sidebar */
+#category-list li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Ensure clickability of all interactive elements */
+.leaflet-control,
+.map-control-button,
+#category-list li,
+.menu-icon-button,
+.transport-option {
+    pointer-events: auto !important;
+}
+
+/* Leaflet Overrides */
+.leaflet-popup-content {
+    margin: 10px;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 4px;
+}
+
+.leaflet-popup-content h3 {
+    margin: 0 0 5px 0;
+}
+
+.leaflet-popup-content p {
+    margin: 0 0 5px 0;
+}
+
+/* Custom Popup */
+.custom-popup {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 8px;
+}
+
+/* Leaflet Draw Overrides */
+.leaflet-draw-toolbar a {
+    background-image: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 44px !important; /* Minimum touch target size */
+    height: 44px !important; /* Minimum touch target size */
+}
+
+.leaflet-draw-toolbar a:before {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-size: 18px; /* Larger icons for mobile */
+}
+
+.leaflet-draw-draw-polyline:before {
+    content: "\f1e0";
+}
+
+.leaflet-draw-draw-polygon:before {
+    content: "\f5ee";
+}
+
+.leaflet-draw-draw-rectangle:before {
+    content: "\f0c8";
+}
+
+.leaflet-draw-draw-circle:before {
+    content: "\f111";
+}
+
+.leaflet-draw-draw-marker:before {
+    content: "\f3c5";
+}
+
+.leaflet-draw-edit-edit:before {
+    content: "\f044";
+}
+
+.leaflet-draw-edit-remove:before {
+    content: "\f2ed";
+}
+
+/* Leaflet Measure Overrides */
+.leaflet-control-measure a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 44px !important; /* Minimum touch target size */
+    height: 44px !important; /* Minimum touch target size */
+}
+
+.leaflet-control-measure a:before {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    content: "\f545";
+    font-size: 18px; /* Larger icons for mobile */
+}
+
+/* Touch-specific improvements */
+@media (pointer: coarse) {
+    /* Styles for touch devices */
+    .leaflet-control-zoom a,
+    .leaflet-control-layers-toggle,
+    .leaflet-control-attribution {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
     
-    .mobile-menu-button i {
-        color: var(--primary-color);
-        font-size: 20px;
+    /* Improve touch scrolling */
+    #sidebar, .modal-content, .custom-popup {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Prevent text selection on touch */
+    .category-item, .button, .map-control-button {
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
     }
 }
